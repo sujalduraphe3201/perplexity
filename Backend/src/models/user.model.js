@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     verified: {
         type: Boolean,
-        default: true,
+        default: false,
     },
 }, {
     timestamps: true,
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
 //before saving a document ,hash the password
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
-        return next();
+        return ;
     }
     this.password = await bcrypt.hash(this.password, 10);
 })

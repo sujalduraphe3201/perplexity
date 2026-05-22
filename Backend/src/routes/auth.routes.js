@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register } from "../controllers/auth.controller.js";
+import { register ,verifyEmail} from "../controllers/auth.controller.js";
 import registerValidator from "../validators/register.validator.js";
 
 
@@ -16,5 +16,10 @@ router.post("/register", registerValidator, register);
  * @access Public
  */
 // router.post("/login", login);
+
+
+
+router.get("/verify-email", verifyEmail)
+
 
 export default router
