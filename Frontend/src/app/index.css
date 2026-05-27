@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+
+:root{
+	--bg: #F7F8FA; /* off-white background */
+	--surface: #FFFFFF; /* card surface */
+	--primary: #1F2937;
+	--muted: #6B7280;
+	--border: #E5E7EB;
+	--accent: #FF6A00; /* Royal orange */
+	--accentHover: #E65A00;
+	--btn: #000000; /* black buttons */
+	--error: #DC2626;
+	--success: #16A34A;
+}
+
+html, body, #root {
+	height: 100%;
+	background-color: var(--bg);
+	color: var(--primary);
+}
+
+/* Ensure link and form default colors match the provided theme */
+a { color: var(--accent); }
+input, textarea, select, button { color: inherit; }
+
+/* Small utility for card surfaces */
+.pc-surface { background-color: var(--surface); }
+
+/* Smooth font rendering */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
