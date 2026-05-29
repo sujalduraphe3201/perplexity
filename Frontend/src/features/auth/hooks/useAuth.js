@@ -23,10 +23,15 @@ function useAuth() {
         try {
             dispatch(setLoading(true))
             const data = await login({ email, password })
+            if (!data?.user) {
+                throw new Error(data?.message || "Login failed")
+            }
             dispatch(setUser(data.user))
+            return true
         }
         catch (err) {
-            dispatch(setError(err.message || "Login failed"))
+            dispatch(setError(err.response?.data?.message || err.message || "Login failed"))
+            return false
         }
         finally {
             dispatch(setLoading(false))

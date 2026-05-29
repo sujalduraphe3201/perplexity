@@ -70,12 +70,6 @@ export async function login(req, res) {
                 success: false,
             });
         }
-        if (!user.verified) {
-            return res.status(403).json({
-                message: "User not verified",
-                success: false,
-            });
-        }
         const token = jwt.sign({
             id: user._id,
             username: user.username
@@ -88,7 +82,13 @@ export async function login(req, res) {
         res.status(200).json({
             message: "Login successful",
             success: true,
-            token
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                verified: user.verified,
+            }
         });
 
     }
