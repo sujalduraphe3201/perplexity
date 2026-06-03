@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ["Ai", "user"],
+    enum: ["ai", "user"],
   },
 }, {
   timestamps: true,

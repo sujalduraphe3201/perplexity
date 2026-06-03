@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
-export async function authMiddleware(req, res, next) {
-    const token = req.cookies.token
+
+export function authMiddleware(req, res, next) {
+    const token = req.cookies.token;
     if (!token) {
         return res.status(401).json({
             message: "Unauthorized",
@@ -8,14 +9,14 @@ export async function authMiddleware(req, res, next) {
         });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
         return res.status(401).json({
-            message: "Unauthorized",
+            message: "Unauthorized - Invalid or expired token",
             success: false,
         });
     }
-    req.user = decoded;
-    next();
-
 }

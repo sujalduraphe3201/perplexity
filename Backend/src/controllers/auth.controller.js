@@ -19,7 +19,7 @@ export async function register(req, res) {
         }
 
         const user = await userModel.create({ username, email, password });
-        const emailverifyToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET)
+        const emailverifyToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET)
 
         sendEmail({
             to: email,

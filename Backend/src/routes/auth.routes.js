@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getMe, login, register, verifyEmail } from "../controllers/auth.controller.js";
 import registerValidator from "../validators/register.validator.js";
+import loginValidator from "../validators/login.validator.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 
@@ -17,7 +18,7 @@ router.post("/register", registerValidator, register);
  * @desc  user login
  * @access Public
  */
-router.post("/login", login);
+router.post("/login", loginValidator, login);
 
 /**
  * @route GET /api/auth/verify-email
