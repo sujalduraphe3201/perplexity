@@ -15,19 +15,21 @@ const mistralModel = new ChatMistralAI({
 
 
 export async function generateResponse(messages) {
-    const response = await geminiModel.invoke(messages.map((msg) => {
-        if (msg.role === "user") {
-            return new HumanMessage(msg.content)
-        }
-        else if (msg.role === "ai") {
-            return new AIMessage(msg.content)
-        }
-    }))
+    const response = await mistralModel.invoke([
+        new SystemMessage(`You are an expert at giving clear, well-formatted responses.`),
+        ...messages.map((msg) => {
+            if (msg.role === "user") {
+                return new HumanMessage(msg.content)
+            } else if (msg.role === "ai") {
+                return new AIMessage(msg.content)
+            }
+        })
+    ])
     return response.text
 }
 
 export async function generateChatTitle(message) {
-    const response = await mistralModel.invoke([
+    const response = await geminiModel.invoke([
         new SystemMessage(`
             You are an expert at generating titles that are precise and concise for chat messages.
             Generate a title for the following chat message in 2-4 words.When returning the title just write the Title no extra symbol just words and spaces
