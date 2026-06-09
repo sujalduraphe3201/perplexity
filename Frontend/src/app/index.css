@@ -1,32 +1,273 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
-
-:root{
-	--bg: #F7F8FA; /* off-white background */
-	--surface: #FFFFFF; /* card surface */
-	--primary: #1F2937;
-	--muted: #6B7280;
-	--border: #E5E7EB;
-	--accent: #FF6A00; /* Royal orange */
-	--accentHover: #E65A00;
-	--btn: #000000; /* black buttons */
-	--error: #DC2626;
-	--success: #16A34A;
+/* Register Perplexity design tokens as Tailwind color utilities */
+@theme {
+  --color-bg: #171615;
+  --color-surface: #1F1D1B;
+  --color-surface2: #252220;
+  --color-edge: #2E2B28;
+  --color-edge2: #3D3A36;
+  --color-ink: #E8E4DC;
+  --color-muted: #76716A;
+  --color-dim: #5C5650;
+  --color-soft: #C8C2BA;
+  --color-faint: #3D3A36;
+  --color-accent: #20B2A8;
 }
 
-html, body, #root {
-	height: 100%;
-	background-color: var(--bg);
-	color: var(--primary);
+/* Base */
+html,
+body,
+#root {
+  height: 100%;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Ensure link and form default colors match the provided theme */
-a { color: var(--accent); }
-input, textarea, select, button { color: inherit; }
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
 
-/* Small utility for card surfaces */
-.pc-surface { background-color: var(--surface); }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-/* Smooth font rendering */
-body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+::-webkit-scrollbar-thumb {
+  background: #2E2B28;
+  border-radius: 99px;
+}
 
+/* Muted placeholder */
+::placeholder {
+  color: #5C5650 !important;
+}
+
+textarea {
+  font-family: inherit;
+}
+
+/* Fade-up entrance animation for messages */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.msg-enter {
+  animation: fadeUp 0.22s ease both;
+}
+
+/* Animated thinking dots */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #76716A;
+}
+
+.dot:nth-child(1) {
+  animation: blink 1.2s ease-in-out 0s infinite;
+}
+
+.dot:nth-child(2) {
+  animation: blink 1.2s ease-in-out 0.2s infinite;
+}
+
+.dot:nth-child(3) {
+  animation: blink 1.2s ease-in-out 0.4s infinite;
+}
+
+/* Composer box: focus-within can't be done with pure Tailwind on child focus */
+.composer-wrap {
+  background: #1F1D1B;
+  border: 1px solid #2E2B28;
+  border-radius: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.composer-wrap:focus-within {
+  border-color: #3D3A36;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
+}
+
+/* Send button states (toggled via conditional className) */
+.send-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.send-btn.active {
+  background: #E8E4DC;
+  color: #171615;
+}
+
+.send-btn.active:hover {
+  background: #fff;
+  transform: scale(1.05);
+}
+
+.send-btn.inactive {
+  background: #252220;
+  color: #3D3A36;
+  cursor: not-allowed;
+}
+
+/* Markdown output — styles applied to nodes rendered by ReactMarkdown */
+.md-body {
+  color: #C8C2BA;
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+.md-body h1,
+.md-body h2,
+.md-body h3,
+.md-body h4 {
+  color: #E8E4DC;
+  font-weight: 600;
+  margin: 18px 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.md-body h1 {
+  font-size: 20px;
+}
+
+.md-body h2 {
+  font-size: 17px;
+}
+
+.md-body h3 {
+  font-size: 15px;
+}
+
+.md-body p {
+  margin: 6px 0;
+}
+
+.md-body strong {
+  color: #E8E4DC;
+  font-weight: 600;
+}
+
+.md-body em {
+  color: #A89E94;
+  font-style: italic;
+}
+
+.md-body ul,
+.md-body ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.md-body li {
+  margin: 4px 0;
+}
+
+.md-body code {
+  background: #252220;
+  border: 1px solid #2E2B28;
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 13px;
+  color: #20B2A8;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.md-body pre {
+  background: #1A1917;
+  border: 1px solid #2E2B28;
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.md-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #C8C2BA;
+  font-size: 13px;
+}
+
+.md-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+  font-size: 13.5px;
+}
+
+.md-body th {
+  background: #1F1D1B;
+  color: #E8E4DC;
+  font-weight: 600;
+  padding: 8px 12px;
+  border: 1px solid #2E2B28;
+  text-align: left;
+}
+
+.md-body td {
+  padding: 7px 12px;
+  border: 1px solid #2E2B28;
+  color: #A89E94;
+}
+
+.md-body tr:hover td {
+  background: #1A1917;
+}
+
+.md-body blockquote {
+  border-left: 3px solid #20B2A8;
+  padding: 4px 12px;
+  margin: 10px 0;
+  color: #76716A;
+  background: #1A1917;
+  border-radius: 0 6px 6px 0;
+}
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid #2E2B28;
+  margin: 16px 0;
+}
+
+.md-body a {
+  color: #20B2A8;
+  text-decoration: none;
+}
+
+.md-body a:hover {
+  text-decoration: underline;
+}

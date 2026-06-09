@@ -1,6 +1,6 @@
-import { initializeSocketConnection } from "../service/chat.service"
 import { useDispatch } from "react-redux"
 import { sendMessage, getChats, getMessages, deleteChat } from "../service/chat.api"
+import { initializeSocketConnection } from "../service/chat.service"
 import {
     setChats,
     addChat,
@@ -13,16 +13,16 @@ import {
     setError
 } from "../chat.slice"
 
+// Custom hook that exposes all chat-related API actions with Redux side effects
 export const useChat = () => {
     const dispatch = useDispatch()
 
+    // Fetch all chats for the logged-in user and store them in Redux
     async function handleGetChats() {
         try {
             dispatch(setIsLoading(true))
             const data = await getChats()
-            if (data?.chats) {
-                dispatch(setChats(data.chats))
-            }
+            if (data?.chats) dispatch(setChats(data.chats))
         } catch (err) {
             dispatch(setError(err?.message))
         } finally {
@@ -30,13 +30,12 @@ export const useChat = () => {
         }
     }
 
+    // Fetch all messages for a specific chat and store them in Redux
     async function handleGetMessages(chatId) {
         try {
             dispatch(setIsLoading(true))
             const data = await getMessages(chatId)
-            if (data?.messages) {
-                dispatch(setMessages(data.messages))
-            }
+            if (data?.messages) dispatch(setMessages(data.messages))
         } catch (err) {
             dispatch(setError(err?.message))
         } finally {
@@ -44,19 +43,22 @@ export const useChat = () => {
         }
     }
 
+    // Send a message, show it optimistically, then refresh with real server data
     async function handleSendMessage({ message, chatId }) {
         try {
             dispatch(setIsSending(true))
-            // Optimistically add user message
+            // Show user's message immediately before the server responds
             dispatch(addMessage({ _id: Date.now(), role: "user", content: message }))
+
             const data = await sendMessage({ message, chat: chatId })
+
             if (data?.aiMessage) {
-                // If a new chat was created, add it to sidebar and set as active
+                // If this was a new thread, add it to the sidebar and activate it
                 if (data.chat && !chatId) {
                     dispatch(addChat(data.chat))
                     dispatch(setCurrentChatId(data.chat._id))
                 }
-                // Refresh messages from server to get real IDs
+                // Replace the optimistic message with real DB data
                 const refreshed = await getMessages(data.chat._id)
                 if (refreshed?.messages) dispatch(setMessages(refreshed.messages))
             }
@@ -68,12 +70,11 @@ export const useChat = () => {
         }
     }
 
+    // Delete a chat and remove it from the sidebar
     async function handleDeleteChat(chatId) {
         try {
             const data = await deleteChat(chatId)
-            if (!data?.error) {
-                dispatch(removeChat(chatId))
-            }
+            if (!data?.error) dispatch(removeChat(chatId))
         } catch (err) {
             dispatch(setError(err?.message))
         }

@@ -1,49 +1,31 @@
 import axios from "axios"
 
-
+// Axios instance shared by all chat API calls
 const api = axios.create({
     baseURL: "http://localhost:3000",
-    withCredentials: true
+    withCredentials: true  // send cookies for auth
 })
 
-
+// POST /api/chats/message — send a message to an existing or new chat
 export const sendMessage = async ({ message, chat }) => {
-    try {
-        const response = await api.post("/api/chats/message", { message, chat })
-        return response.data
-    }
-    catch (error) {
-        console.log("Error sending message", error)
-        throw error
-    }
+    const response = await api.post("/api/chats/message", { message, chat })
+    return response.data
 }
 
+// GET /api/chats — fetch all chats for the current user
 export const getChats = async () => {
-    try {
-        const response = await api.get("/api/chats")
-        return response.data
-    }
-    catch (error) {
-        console.log("Error fetching chats", error)
-    }
+    const response = await api.get("/api/chats")
+    return response.data
 }
 
+// GET /api/chats/:chatId/messages — fetch all messages in a chat
 export const getMessages = async (chatId) => {
-    try {
-        const response = await api.get(`/api/chats/${chatId}/messages`)
-        return response.data
-    }
-    catch (error) {
-        console.log("Error fetching messages", error)
-    }
+    const response = await api.get(`/api/chats/${chatId}/messages`)
+    return response.data
 }
 
+// DELETE /api/chats/delete/:chatId — delete a chat and its messages
 export const deleteChat = async (chatId) => {
-    try {
-        const response = await api.delete(`/api/chats/delete/${chatId}`)
-        return response.data
-    }
-    catch (error) {
-        console.log("Error deleting chat", error)
-    }
+    const response = await api.delete(`/api/chats/delete/${chatId}`)
+    return response.data
 }

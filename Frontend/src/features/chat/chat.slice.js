@@ -1,20 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"
 
 const chatSlice = createSlice({
     name: "chat",
     initialState: {
-        chats: [],
-        messages: [],
-        isLoading: false,
-        isSending: false,
+        chats: [],           // list of chat threads shown in the sidebar
+        messages: [],        // messages of the currently active chat
+        isLoading: false,    // true while fetching chats or messages
+        isSending: false,    // true while waiting for the AI response
         error: null,
-        currentChatId: null
+        currentChatId: null  // _id of the open thread, null = new thread
     },
     reducers: {
         setChats(state, action) {
             state.chats = action.payload
         },
         addChat(state, action) {
+            // Prepend so the newest thread appears at the top
             state.chats.unshift(action.payload)
         },
         removeChat(state, action) {
